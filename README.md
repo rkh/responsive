@@ -1,3 +1,7 @@
+# Responsive and accessible CSS
+
+CSS/SASS mixin to define breakpoints that respect a user's font size preference, and thus offer better accessibility (especially for people with low vision).
+
 ## Breakpoints
 
  Breakpoint | Assumed width | Actual breakpoint                     | Font size
