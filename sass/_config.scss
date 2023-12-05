@@ -1,0 +1,64 @@
+@use "sass:list";
+@use "sass:map";
+
+/// The base font size to be assumed for the design.
+/// 
+/// This is the font size used right at the start of a given break point, if the system font size is $system-default-font-size.
+/// Otherwise it will be scaled relative to the system font size to allow for better accessibility.
+///
+/// **Unit has to be px**.
+/// 
+/// @type Number
+/// 
+/// @example scss
+///   @use "responsive" with ($base-font-size: 14px);
+$base-font-size: 16px !default;
+
+/// The minimum font size the smallest breakpoint might be scaled down to.
+/// Beyond this, the user may have to scroll horizontally.
+$min-font-size: 14px !default;
+
+/// The system font size to be assumed as "normal" for web pages.
+/// 
+/// Normally this is `16px`, so if you change it to `14px`,
+/// most browsers will be assumed to have an increased font-size for accessibility.
+/// 
+/// You usually don't need to change this, but it's here if you want to.
+/// 
+/// **Unit has to be px**.
+/// 
+/// @type Number
+/// 
+/// @see $base-font-size
+$system-default-font-size: 16px !default;
+
+/// The breakpoints to be used.
+/// 
+/// **Keys have to be strings and values need to be px**.
+/// 
+/// Note that these are not necessarily the actual breakpoints, as they will be scaled based on the system font size.
+/// 
+/// @example scss
+///   @use "responsive" with (
+///     $breakpoints: ("small": 375px, "medium": 800px, "large": 1200px),
+///     $base-font-size: 14px
+///   );
+/// 
+/// @type Map
+$breakpoints: (
+  xs: 350px, // 21.875em at 16px
+  sm: 576px, // 36em at 16px
+  md: 768px, // 48em at 16px
+  lg: 992px, // 62em at 16px
+  xl: 1200px // 75em at 16px
+) !default;
+
+/// Names of all available breakpoints. Not a configurable value, will be determined based on `$breakpoints`.
+/// @see $breakpoints
+/// @type List
+$breakpoint-names: map.keys($breakpoints);
+
+/// Name of the first breakpoint. Not a configurable value, will be determined based on `$breakpoints`.
+/// @see $breakpoints
+/// @type String
+$first-breakpoint: list.nth(list.nth($breakpoints, 1), 1);

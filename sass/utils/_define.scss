@@ -1,0 +1,76 @@
+@use "../config" as *;
+@use "../mixins" as *;
+@use "../functions" as *;
+
+@use "sass:map";
+@use "sass:meta";
+@use "sass:string";
+
+$-responsive-variables: ();
+
+@function -call($function, $fixed-value, $breakpoint: $first-breakpoint) {
+  @if $fixed-value == null {
+    @return meta.call($function, $breakpoint);
+  } @else {
+    @return $fixed-value;
+  }
+}
+
+@function identity($value) {
+  @return $value;
+}
+
+@mixin define($name, $syntax: "<length>", $function: null, $fixed-value: null, $per-breakpoint: true) {
+  @if $function == null and $fixed-value == null {
+    $function: $name;
+  }
+
+  @if meta.type-of($function) == "string" {
+    $function: meta.get-function($function);
+  }
+  
+  // dynamic property
+  @property --#{$name} {
+    syntax: "#{$syntax}";
+    inherits: true;
+    initial-value: -call($function, $fixed-value);
+  }
+
+  // properties for each breakpoint
+  @if $per-breakpoint {
+    @each $breakpoint in $breakpoint-names {
+      @property --#{$breakpoint}-#{$name} {
+        syntax: "#{$syntax}";
+        inherits: true;
+        initial-value: -call($function, $fixed-value, $breakpoint);
+      }
+    }
+  }
+
+  // set initial and static values
+  :root {
+    --#{$name}: #{-call($function, $fixed-value)};
+    @if $per-breakpoint {
+      @each $breakpoint in $breakpoint-names {
+        --#{$breakpoint}-#{$name}: #{-call($function, $fixed-value, $breakpoint)};
+      }
+    }
+  }
+
+  // media queries
+  @if $fixed-value == null {
+    $-responsive-variables: map.set($-responsive-variables, $name, $function) !global;
+  }
+}
+
+@mixin definitions {
+  @each $breakpoint in $breakpoint-names {
+    @include breakpoint($breakpoint) {
+      :root {
+        @each $name, $function in $-responsive-variables {
+          --#{$name}: #{meta.call($function, $breakpoint)};
+        }
+      }
+    }
+  }
+}

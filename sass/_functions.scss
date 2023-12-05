@@ -1,0 +1,153 @@
+@use "config" as *;
+
+@use "sass:math";
+@use "sass:string";
+@use "sass:list";
+@use "sass:meta";
+@use "sass:map";
+
+$-responsive-units: (
+  em,
+  rem,
+  vw,
+  vh,
+  vmin,
+  vmax
+);
+
+/// Scale from an assumed pixel width to a responsive width, or get the assumed width for a given breakpoint.
+/// 
+/// Takes an optional unit to return the responsive value in. If you use the result in a `@media` query, set it to
+/// `em`, otherwise leave it as `rem`.
+/// 
+/// These sizes are relative to the system font size (for "em" values) or base font size (for "rem" values).
+/// 
+/// This will often use for sizing elements, but if that explanation doesn't make sense in the context you want to use it it,
+/// it probably means you're better off using {size} instead. 
+/// 
+/// @example scss input and output values
+///   @use "responsive" as *;
+/// 
+///   @debug responsive-width("sm");  // 36rem
+///   @debug responsive-width(100px); // 6.25rem
+///   @debug responsive-width(12pt);  // 1rem
+/// 
+/// 
+/// @param {Number|String} $input - The breakpoint or pixel value to get the assumed width for.
+/// @param {String} $unit ["rem"] -  The unit to return the assumed width in (has to be "rem" or "em").
+/// @return {Number} The assumed width in the given unit.
+///
+/// @see size
+@function responsive-width($input, $unit: "rem", $first-zero: false) {
+  @if $unit == "em" { $unit: 1em; }
+  @if $unit =="rem" { $unit: 1rem; }
+  @if $unit != 1em and $unit != 1rem {
+    @error "Invalid for $unit: #{$unit}";
+  }
+
+  @if meta.type-of($input)=="number" {
+    @if list.index($-responsive-units, string.to-lower-case(math.unit($input))) {
+      @return $input
+    } @else {
+      @if $unit == 1rem {
+        @return math.div($input, $base-font-size) * $unit;
+      } @else {
+        @return math.div($input, $system-default-font-size) * $unit;
+      }
+    }
+  } @else {
+    @return responsive-width(assumed-width($input, $first-zero: $first-zero), $unit);
+  }
+}
+
+/// The assumed width in pixels for a given breakpoint.
+/// 
+/// @example scss
+///   @debug responsive.assumed-width("sm"); // 576px
+///   @debug responsive.assumed-width(); // var(--assumed-width)
+/// 
+/// @param {String} $breakpoint - The breakpoint to get the assumed width for.
+/// @return {Number|String} The assumed width in pixels.
+@function assumed-width($breakpoint: null, $first-zero: false) {
+  @if $breakpoint == null { @return var(--assumed-width); }
+  @if $first-zero and $breakpoint == $first-breakpoint { @return 0px; }
+  @if map.has-key($breakpoints, $breakpoint) { @return map.get($breakpoints, $breakpoint); }
+  @else { @error "Invalid breakpoint: #{$breakpoint}"; }
+}
+
+/// The minimum width in pixels a given breakpoint might be scaled down to.
+/// @param {String} $breakpoint - The breakpoint to get the minimum width for.
+/// @return {Number|String} The minimum width in pixels.
+@function min-width($breakpoint: null) {
+  @if $breakpoint == null { @return var(--responsive-min-width); }
+  $factor: if($breakpoint == $first-breakpoint, math.div($min-font-size, $base-font-size), 1);
+  @return assumed-width($breakpoint) * $factor;
+}
+
+/// The width of a scalable pixel-equivalent for a given breakpoint.
+/// 
+/// This will also be set as a CSS variable on `:root` with the name `--responsive-pixel-width`.
+/// This variable will be returned if no breakpoint is given.
+/// 
+/// @example scss
+///   @debug responsive.pixel-width("sm"); // 0.1736111111vw
+///   @debug responsive.pixel-width(); // var(--responsive-pixel-width)
+/// 
+/// @param {String|Null} $breakpoint [null] - The breakpoint to get the assumed width for.
+/// @return {Number} The scalable pixel-equivalent in `vw`.
+/// @see size
+@function pixel-width($breakpoint: null) {
+  @if $breakpoint == null { @return var(--responsive-pixel-width); }
+  @return math.div(100vw, assumed-width($breakpoint)) * 1px;
+}
+
+/// Base font-size as `vw` for a given breakpoint.
+/// 
+/// This will also be set as a CSS variable on `:root` with the name `--responsive-base-font-size`.
+/// 
+/// @example scss
+///   @debug responsive.base-font-size("sm"); // 2.7777777778vw
+///   @debug responsive.base-font-size(); // var(--responsive-base-font-size)
+/// 
+/// @param {String|Null} $breakpoint [null] - The breakpoint to get the assumed width for.
+/// @return {Number} The assumed width in `vw`.
+@function base-font-size($breakpoint: null) {
+  @if $breakpoint == null { @return var(--responsive-base-font-size); }
+  @return math.div(100vw, assumed-width($breakpoint)) * $base-font-size;
+}
+
+/// Returns the scalable version of a given size for use in width/height/etc properties.
+/// Takes an optional breakpoint argument, in which case it will return an number instead of a CSS formula.
+/// 
+/// @example scss return values
+///   @debug responsive.size(100px, "sm"); // 17.3611111111vw
+///   @debug responsive.size(100pt, "sm"); // 23.1481481481vw
+///   @debug responsive.size(100px); // calc(var(--responsive-pixel-width) * 100px)
+/// 
+/// @example scss use with properties
+///   .example {
+///     width: responsive.size(100px);
+///     height: responsive.size(50px);
+///   }
+/// 
+/// @param {Number} $input - The size to scale.
+/// @param {String|Null} $breakpoint [null] - The breakpoint to get the assumed width for.
+/// @return {Number|String} The scalable size.
+@function size($input, $breakpoint: null) {
+  @if $breakpoint == null {
+    @return calc(var(--responsive-pixel-width) * #{$input})
+  } @else {
+    $value: math.div($input, 1px); // convert to px and drop unit
+    @return pixel-width($breakpoint) * $value;
+  }
+}
+
+/// Returns the name of the next breakpoint after a given breakpoint.
+@function next-breakpoint($breakpoint) {
+  $index: index($breakpoint-names, $breakpoint);
+  @if $index == length($breakpoint-names) {
+    @return null;
+  } @else {
+    @return nth($breakpoint-names, $index + 1);
+  }
+}

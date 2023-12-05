@@ -1,0 +1,419 @@
+/**
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) Konstantin Haase
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/**
+ * breakpoint-names - The names of all breakpoints.
+ */
+@property --breakpoint-names {
+  syntax: "<custom-ident>#";
+  inherits: true;
+  initial-value: xs, sm, md, lg, xl;
+}
+:root {
+  --breakpoint-names: xs, sm, md, lg, xl;
+}
+
+/**
+ * breakpoint - The name of the current breakpoint.
+ */
+@property --breakpoint {
+  syntax: "<custom-ident>";
+  inherits: true;
+  initial-value: xs;
+}
+:root {
+  --breakpoint: xs;
+}
+
+/**
+ * assumed-width - The assumed width of the viewport at a given breakpoint, in px.
+ */
+@property --assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 350px;
+}
+@property --xs-assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 350px;
+}
+@property --sm-assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 576px;
+}
+@property --md-assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 768px;
+}
+@property --lg-assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 992px;
+}
+@property --xl-assumed-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1200px;
+}
+:root {
+  --assumed-width: 350px;
+  --xs-assumed-width: 350px;
+  --sm-assumed-width: 576px;
+  --md-assumed-width: 768px;
+  --lg-assumed-width: 992px;
+  --xl-assumed-width: 1200px;
+}
+
+/**
+ * assumed-base-font-size - The assumed base font size, in px.
+ */
+@property --assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+@property --xs-assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+@property --sm-assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+@property --md-assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+@property --lg-assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+@property --xl-assumed-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+:root {
+  --assumed-base-font-size: 16px;
+  --xs-assumed-base-font-size: 16px;
+  --sm-assumed-base-font-size: 16px;
+  --md-assumed-base-font-size: 16px;
+  --lg-assumed-base-font-size: 16px;
+  --xl-assumed-base-font-size: 16px;
+}
+
+/**
+ * assumed-pixel-width - The assumed base font size, in px.
+ */
+@property --assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+@property --xs-assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+@property --sm-assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+@property --md-assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+@property --lg-assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+@property --xl-assumed-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+:root {
+  --assumed-pixel-width: 1px;
+  --xs-assumed-pixel-width: 1px;
+  --sm-assumed-pixel-width: 1px;
+  --md-assumed-pixel-width: 1px;
+  --lg-assumed-pixel-width: 1px;
+  --xl-assumed-pixel-width: 1px;
+}
+
+/**
+ * responsive-width - The breakpoint width converted to em for flexible media queries.
+ */
+@property --responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 21.875rem;
+}
+@property --xs-responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 21.875rem;
+}
+@property --sm-responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 36rem;
+}
+@property --md-responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 48rem;
+}
+@property --lg-responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 62rem;
+}
+@property --xl-responsive-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 75rem;
+}
+:root {
+  --responsive-width: 21.875rem;
+  --xs-responsive-width: 21.875rem;
+  --sm-responsive-width: 36rem;
+  --md-responsive-width: 48rem;
+  --lg-responsive-width: 62rem;
+  --xl-responsive-width: 75rem;
+}
+
+/**
+ * responsive-min-width - How small the viewpoint can be scaled down to.
+ */
+@property --responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 306.25px;
+}
+@property --xs-responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 306.25px;
+}
+@property --sm-responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 576px;
+}
+@property --md-responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 768px;
+}
+@property --lg-responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 992px;
+}
+@property --xl-responsive-min-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1200px;
+}
+:root {
+  --responsive-min-width: 306.25px;
+  --xs-responsive-min-width: 306.25px;
+  --sm-responsive-min-width: 576px;
+  --md-responsive-min-width: 768px;
+  --lg-responsive-min-width: 992px;
+  --xl-responsive-min-width: 1200px;
+}
+
+/**
+ * responsive-base-font-size - The base font size converted to em for flexible media queries.
+ */
+@property --responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 4.5714285714vw;
+}
+@property --xs-responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 4.5714285714vw;
+}
+@property --sm-responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 2.7777777778vw;
+}
+@property --md-responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 2.0833333333vw;
+}
+@property --lg-responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1.6129032258vw;
+}
+@property --xl-responsive-base-font-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1.3333333333vw;
+}
+:root {
+  --responsive-base-font-size: 4.5714285714vw;
+  --xs-responsive-base-font-size: 4.5714285714vw;
+  --sm-responsive-base-font-size: 2.7777777778vw;
+  --md-responsive-base-font-size: 2.0833333333vw;
+  --lg-responsive-base-font-size: 1.6129032258vw;
+  --xl-responsive-base-font-size: 1.3333333333vw;
+}
+
+/**
+ * responsive-pixel-width - The width of a scaled pixel-equivalent.
+ */
+@property --responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.2857142857vw;
+}
+@property --xs-responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.2857142857vw;
+}
+@property --sm-responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.1736111111vw;
+}
+@property --md-responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.1302083333vw;
+}
+@property --lg-responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.1008064516vw;
+}
+@property --xl-responsive-pixel-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0.0833333333vw;
+}
+:root {
+  --responsive-pixel-width: 0.2857142857vw;
+  --xs-responsive-pixel-width: 0.2857142857vw;
+  --sm-responsive-pixel-width: 0.1736111111vw;
+  --md-responsive-pixel-width: 0.1302083333vw;
+  --lg-responsive-pixel-width: 0.1008064516vw;
+  --xl-responsive-pixel-width: 0.0833333333vw;
+}
+
+/**
+ * Media queries for each breakpoint.
+ */
+@media (min-width: 0em) {
+  @media not all and (min-width: 36em) {
+    :root {
+      --breakpoint: xs;
+      --assumed-width: 350px;
+      --responsive-width: 21.875rem;
+      --responsive-min-width: 306.25px;
+      --responsive-base-font-size: 4.5714285714vw;
+      --responsive-pixel-width: 0.2857142857vw;
+    }
+  }
+}
+@media (min-width: 36em) {
+  @media not all and (min-width: 48em) {
+    :root {
+      --breakpoint: sm;
+      --assumed-width: 576px;
+      --responsive-width: 36rem;
+      --responsive-min-width: 576px;
+      --responsive-base-font-size: 2.7777777778vw;
+      --responsive-pixel-width: 0.1736111111vw;
+    }
+  }
+}
+@media (min-width: 48em) {
+  @media not all and (min-width: 62em) {
+    :root {
+      --breakpoint: md;
+      --assumed-width: 768px;
+      --responsive-width: 48rem;
+      --responsive-min-width: 768px;
+      --responsive-base-font-size: 2.0833333333vw;
+      --responsive-pixel-width: 0.1302083333vw;
+    }
+  }
+}
+@media (min-width: 62em) {
+  @media not all and (min-width: 75em) {
+    :root {
+      --breakpoint: lg;
+      --assumed-width: 992px;
+      --responsive-width: 62rem;
+      --responsive-min-width: 992px;
+      --responsive-base-font-size: 1.6129032258vw;
+      --responsive-pixel-width: 0.1008064516vw;
+    }
+  }
+}
+@media (min-width: 75em) {
+  :root {
+    --breakpoint: xl;
+    --assumed-width: 1200px;
+    --responsive-width: 75rem;
+    --responsive-min-width: 1200px;
+    --responsive-base-font-size: 1.3333333333vw;
+    --responsive-pixel-width: 0.0833333333vw;
+  }
+}
+/**
+ * Set the base font size for the root element.
+ * All other font sizes and rem values will be relative to this.
+ */
+html {
+  font-size: var(--responsive-base-font-size) !important;
+}
+
+/**
+ * Set the font-size and min-width on body.
+ */
+body {
+  font-size: 1rem;
+  min-width: 306.25px;
+}
+
+/*# sourceMappingURL=index.css.map */

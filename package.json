@@ -1,0 +1,23 @@
+{
+  "name": "@rkh/responsive",
+  "version": "0.0.1",
+  "description": "Responsive CSS with dynamic breakpoints",
+  "main": "css/index.css",
+  "style": "css/index.css",
+  "files": [
+    "css/*",
+    "scss/*",
+    "_index.scss",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "repository": "rkh/responsive",
+  "license": "MIT",
+  "scripts": {
+    "build": "sass src/index.scss css/index.css && sass --no-source-map --style compressed src/index.scss css/index.min.css"
+  },
+  "devDependencies": {
+    "sass": ">=1.67.0",
+    "sass-true": "^7.0.0"
+  }
+}

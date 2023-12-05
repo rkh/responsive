@@ -1,0 +1,74 @@
+@use "config" as *;
+@use "functions" as *;
+@use "utils/define" as *;
+@use "sass:map";
+
+/**
+ * breakpoint-names - The names of all breakpoints.
+ */
+@include define("breakpoint-names",
+  $syntax: "<custom-ident>#",
+  $fixed-value: map.keys($breakpoints),
+  $per-breakpoint: false,
+);
+
+/**
+ * breakpoint - The name of the current breakpoint.
+ */
+@include define("breakpoint", $syntax: "<custom-ident>", $function: identity, $per-breakpoint: false);
+
+/**
+ * assumed-width - The assumed width of the viewport at a given breakpoint, in px.
+ */
+@include define("assumed-width");
+
+/**
+ * assumed-base-font-size - The assumed base font size, in px.
+ */
+@include define("assumed-base-font-size", $fixed-value: $base-font-size);
+
+/**
+ * assumed-pixel-width - The assumed base font size, in px.
+ */
+@include define("assumed-pixel-width", $fixed-value: 1px);
+
+/**
+ * responsive-width - The breakpoint width converted to em for flexible media queries.
+ */
+@include define("responsive-width");
+
+/**
+ * responsive-min-width - How small the viewpoint can be scaled down to.
+ */
+@include define("responsive-min-width", $function: "min-width");
+  
+/**
+ * responsive-base-font-size - The base font size converted to em for flexible media queries.
+ */
+@include define("responsive-base-font-size", $function: "base-font-size");
+
+/**
+ * responsive-pixel-width - The width of a scaled pixel-equivalent.
+ */
+@include define("responsive-pixel-width", $function: "pixel-width");
+
+/**
+ * Media queries for each breakpoint.
+ */
+@include definitions;
+
+/**
+ * Set the base font size for the root element.
+ * All other font sizes and rem values will be relative to this.
+ */
+html {
+  font-size: var(--responsive-base-font-size) !important;
+}
+
+/**
+ * Set the font-size and min-width on body.
+ */
+body {
+  font-size: 1rem;
+  min-width: min-width($first-breakpoint);
+}
