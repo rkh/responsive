@@ -56,7 +56,7 @@ The following input:
 ``` scss
 .example {
   @include responsive.breakpoint("sm") { width: 100%; }
-  @include responsive.breakpoint("md") { width: 50%; } 
+  @include responsive.breakpoint("md", $and-up: true) { width: 50%; } 
 }
 ```
 
@@ -64,8 +64,10 @@ Will be compiled to:
 
 ``` css
 @media (min-width: 36em) {
-  .example {
-    width: 100%;
+  @media not all and (min-width: 48em) {
+    .example {
+      width: 100%;
+    }
   }
 }
 @media (min-width: 48em) {
