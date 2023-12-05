@@ -14,6 +14,8 @@ CSS/SASS mixin to define breakpoints that respect a user's font size preference,
 
 Note that for media queries, you should use `0em` for the `xs` breakpoint, to allow scaling down beyond the assumed width.
 
+These breakpoints are [configurable](#variables-and-configuration).
+
 ## SCSS
 
 ### Example usage
