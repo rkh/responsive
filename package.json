@@ -6,7 +6,7 @@
   "style": "css/index.css",
   "files": [
     "css/*",
-    "scss/*",
+    "sass/*",
     "_index.scss",
     "LICENSE.md",
     "README.md"
