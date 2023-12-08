@@ -1,0 +1,62 @@
+@use "../config" as *;
+@use "state";
+@use "sass:list";
+@use "sass:string";
+
+@function layer-name($breakpoint: null, $and-up: null, $error: true) {
+  $prefix: "bp";
+  @if $and-up == null { $and-up: state.and-up(); }
+  @if $breakpoint == null { $breakpoint: state.breakpoint($and-up); }
+  @if $breakpoint == null and $error { @error "No breakpoint set"; }
+  @if $and-up { $prefix: "from-bp"; }
+  @return string.unquote("#{$prefix}-#{$breakpoint}");
+}
+
+@function layer-names($and-up: null, $include-base: false) {
+  @if $include-base {
+    @return list.join((base), layer-names($and-up), comma);
+  }
+  @if $and-up == null {
+    @return list.join(layer-names(true, $include-base), layer-names(false), comma);
+  }
+  $names: ();
+  @each $breakpoint in $breakpoint-names {
+    $names: list.append($names, layer-name($breakpoint, $and-up), $separator: comma);
+  }
+  @return $names;
+}
+
+@mixin with-top-layer {
+  @if $use-layers and $layer-namespace {
+    @layer #{$layer-namespace} {
+      @content;
+    }
+  }
+}
+
+@mixin with-layer($layer: null) {
+  @if $layer == null { $layer: $use-layers; }
+  @if $layer == true { $layer: layer-name(); }
+  @if $layer {
+    @include with-top-layer {
+      @layer #{$layer} {
+        @content;
+      }
+    }
+  } @else {
+    @content;
+  }
+}
+
+// @mixin definition {
+//   @if $use-layers {
+//     @at-root {
+//       @include with-top-layer {
+//         @each $breakpoint in $breakpoint-names {
+//           @layer layer-name($breakpoint) {
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

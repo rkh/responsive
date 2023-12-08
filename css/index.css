@@ -22,6 +22,12 @@
  * SOFTWARE.
  */
 /**
+* layer definitions
+*/
+@layer responsive {
+  @layer base, from-bp-xs, from-bp-sm, from-bp-md, from-bp-lg, from-bp-xl, bp-xs, bp-sm, bp-md, bp-lg, bp-xl;
+}
+/**
  * breakpoint-names - The names of all breakpoints.
  */
 @property --breakpoint-names {

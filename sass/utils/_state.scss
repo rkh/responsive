@@ -1,0 +1,21 @@
+$-breakpoint: null;
+$-and-up: false;
+
+@mixin with-breakpoint($breakpoint, $and-up: false) {
+  $breakpoint-was: $-breakpoint;
+  $and-up-was: $-and-up;
+  $-breakpoint: $breakpoint !global;
+  $-and-up: $and-up !global;
+  @content;
+  $-breakpoint: $breakpoint-was !global;
+  $-and-up: $and-up-was !global;
+}
+
+@function breakpoint($strict: false) {
+  @if $strict and $-and-up { @return null; }
+  @return $-breakpoint;
+}
+
+@function and-up() {
+  @return $-and-up;
+}

@@ -1,5 +1,7 @@
 @use "functions" as *;
 @use "config" as *;
+@use "utils/state";
+@use "utils/layers";
 
 /// Generates a `min-width` media query for a given breakpoint. If the smallest breakpoint is used,
 /// the content will be returned without a media query.
@@ -23,19 +25,30 @@
 ///        width: 50%;
 ///      }
 ///    }
-@mixin breakpoint($input, $and-up: false) {
-  $min-width: responsive-width($input, "em", $first-zero: true);
+@mixin breakpoint($input, $and-up: false, $use-layers: null) {
   $next-breakpoint: null;
-
   @if not $and-up {
     $next-breakpoint: next-breakpoint($input);
   }
 
+  @include state.with-breakpoint($input, $and-up) {
+    @include -media-query($input, $next-breakpoint) {
+      @include layers.with-layer($use-layers) {
+        @content;
+      }
+    }
+  }
+}
+
+// Always combine with state.with-breakpoint and layers.with-layer.
+@mixin -media-query($from, $to: null) {
+  $min-width: responsive-width($from, "em", $first-zero: true);
+  $max-width: responsive-width($to, "em");
   @media (min-width: $min-width) {
-    @if $next-breakpoint == null {
+    @if $to == null {
       @content;
     } @else {
-      $max-width: responsive-width($next-breakpoint, "em");
+      $max-width: responsive-width($to, "em");
       @media not all and (min-width: $max-width) {
         @content;
       }

@@ -1,7 +1,17 @@
 @use "config" as *;
 @use "functions" as *;
 @use "utils/define" as *;
+@use "utils/layers" as *;
 @use "sass:map";
+
+@if $use-layers {
+  /**
+  * layer definitions
+  */
+  @include with-top-layer {
+    @layer #{layer-names($include-base: true)};
+  }
+}
 
 /**
  * breakpoint-names - The names of all breakpoints.

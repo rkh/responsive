@@ -53,6 +53,15 @@ $breakpoints: (
   xl: 1200px // 75em at 16px
 ) !default;
 
+/// Whether to use layers for the responsive mixins.
+///
+/// This ensures breakpoint rules are applied in order of their size,
+/// regardless of the order they are written in the source code.
+$use-layers: true !default;
+
+/// The namespace to wrap the layers in.
+$layer-namespace: "responsive" !default;
+
 /// Names of all available breakpoints. Not a configurable value, will be determined based on `$breakpoints`.
 /// @see $breakpoints
 /// @type List

@@ -1,4 +1,5 @@
 @use "config" as *;
+@use "utils/state";
 
 @use "sass:math";
 @use "sass:string";
@@ -69,6 +70,7 @@ $-responsive-units: (
 /// @param {String} $breakpoint - The breakpoint to get the assumed width for.
 /// @return {Number|String} The assumed width in pixels.
 @function assumed-width($breakpoint: null, $first-zero: false) {
+  @if $breakpoint == null { $breakpoint: state.breakpoint(true) }
   @if $breakpoint == null { @return var(--assumed-width); }
   @if $first-zero and $breakpoint == $first-breakpoint { @return 0px; }
   @if map.has-key($breakpoints, $breakpoint) { @return map.get($breakpoints, $breakpoint); }
@@ -79,6 +81,7 @@ $-responsive-units: (
 /// @param {String} $breakpoint - The breakpoint to get the minimum width for.
 /// @return {Number|String} The minimum width in pixels.
 @function min-width($breakpoint: null) {
+  @if $breakpoint == null { $breakpoint: state.breakpoint(false) }
   @if $breakpoint == null { @return var(--responsive-min-width); }
   $factor: if($breakpoint == $first-breakpoint, math.div($min-font-size, $base-font-size), 1);
   @return assumed-width($breakpoint) * $factor;
@@ -97,6 +100,7 @@ $-responsive-units: (
 /// @return {Number} The scalable pixel-equivalent in `vw`.
 /// @see size
 @function pixel-width($breakpoint: null) {
+  @if $breakpoint == null { $breakpoint: state.breakpoint(true) }
   @if $breakpoint == null { @return var(--responsive-pixel-width); }
   @return math.div(100vw, assumed-width($breakpoint)) * 1px;
 }
@@ -112,6 +116,7 @@ $-responsive-units: (
 /// @param {String|Null} $breakpoint [null] - The breakpoint to get the assumed width for.
 /// @return {Number} The assumed width in `vw`.
 @function base-font-size($breakpoint: null) {
+  @if $breakpoint == null { $breakpoint: state.breakpoint(true) }
   @if $breakpoint == null { @return var(--responsive-base-font-size); }
   @return math.div(100vw, assumed-width($breakpoint)) * $base-font-size;
 }
@@ -135,6 +140,7 @@ $-responsive-units: (
 /// @return {Number|String} The scalable size.
 @function size($input, $breakpoint: null) {
   $value: math.div($input, 1px); // convert to px and drop unit
+  @if $breakpoint == null { $breakpoint: state.breakpoint(true) }
   @if $breakpoint == null {
     @return calc(var(--responsive-pixel-width) * #{$value})
   } @else {
@@ -142,8 +148,48 @@ $-responsive-units: (
   }
 }
 
+/// Returns the name of the current breakpoint.
+/// 
+/// @param {Boolean} $strict [true] - Whether to require one explicit breakpoint to be active rather than a range.
+/// @param {Boolean} $error [true] - Whether to throw an error if no breakpoint is set.
+/// @return {String|Null} The name of the current breakpoint.
+@function breakpoint($strict: true, $error: true) {
+  $breakpoint: state.breakpoint($strict);
+  @if $breakpoint == null and $error {
+    @error "No current breakpoint set";
+  }
+  @return $breakpoint;
+}
+
+/// Returns whether a given breakpoint is currently active.
+/// Checks if any breakpoint is active if no breakpoint is given.
+/// 
+/// @param {String|Null} $breakpoint [null] - The breakpoint to check.
+/// @param {Boolean} $strict [false] - Whether to require one explicit breakpoint to be active rather than a range.
+@function breakpoint-active($breakpoint: null, $strict: false) {
+  $active-breakpoint: state.breakpoint($strict);
+  @if $active-breakpoint == null { @return false; }
+  @if $breakpoint == null { @return true; }
+  @if $active-breakpoint == $breakpoint { @return true; }
+  @if $strict { @return false; }
+  @if not state.and-up() { @return false; }
+  @return index($breakpoint-names, $breakpoint) >= index($breakpoint-names, $active-breakpoint);
+}
+
 /// Returns the name of the next breakpoint after a given breakpoint.
-@function next-breakpoint($breakpoint) {
+/// 
+/// @param {String|Null} $breakpoint [null] - The breakpoint to get the next breakpoint for.
+/// @param {Boolean} $error [true] - Whether to throw an error if no breakpoint is set.
+/// @return {String|Null} The name of the next breakpoint.
+@function next-breakpoint($breakpoint, $error: true) {
+  @if $breakpoint == null {
+    $breakpoint: state.breakpoint(false);
+    @if $breakpoint == null {
+      @if not $error { @return null; }
+      @error "No breakpoint given and no breakpoint set";
+    }
+  }
+  
   $index: index($breakpoint-names, $breakpoint);
   @if $index == length($breakpoint-names) {
     @return null;

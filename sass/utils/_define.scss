@@ -65,7 +65,7 @@ $-responsive-variables: ();
 
 @mixin definitions {
   @each $breakpoint in $breakpoint-names {
-    @include breakpoint($breakpoint) {
+    @include breakpoint($breakpoint, $use-layers: false) {
       :root {
         @each $name, $function in $-responsive-variables {
           --#{$name}: #{meta.call($function, $breakpoint)};
