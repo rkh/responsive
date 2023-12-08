@@ -68,51 +68,7 @@ h1 {
 Will result in an output similar to:
 
 ``` css
-@layer responsive {
-  @layer base, from-bp-small, from-bp-medium, from-bp-large, bp-small, bp-medium, bp-large;
-}
-
-/* ... property definitions ... */
-
-:root {
-  --breakpoint-names: small, medium, large;
-  /* ... */
-}
-
-@media (min-width: 0em) {
-  @media not all and (min-width: 48em) {
-    :root {
-      --breakpoint: small;
-      --assumed-width: 350px;
-      --responsive-width: 21.875rem;
-      --responsive-min-width: 306.25px;
-      --responsive-base-font-size: 4.5714285714vw;
-      --responsive-pixel-width: 0.2857142857vw;
-    }
-  }
-}
-@media (min-width: 48em) {
-  @media not all and (min-width: 64em) {
-    :root {
-      --breakpoint: medium;
-      --assumed-width: 768px;
-      --responsive-width: 48rem;
-      --responsive-min-width: 768px;
-      --responsive-base-font-size: 2.0833333333vw;
-      --responsive-pixel-width: 0.1302083333vw;
-    }
-  }
-}
-@media (min-width: 64em) {
-  :root {
-    --breakpoint: large;
-    --assumed-width: 1024px;
-    --responsive-width: 64rem;
-    --responsive-min-width: 1024px;
-    --responsive-base-font-size: 1.5625vw;
-    --responsive-pixel-width: 0.09765625vw;
-  }
-}
+/* ... layer and property definitions, as well as setting font-size on :root ... */
 
 /* scale the font-size for headlines */
 h1 {
