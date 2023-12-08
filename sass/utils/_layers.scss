@@ -17,8 +17,10 @@ $-base-layer: "base";
 
 @function layer-names($and-up: null, $include-base: false, $with-namespace: true) {
   @if $include-base {
+    $base: $-base-layer;
+    @if $with-namespace and $layer-namespace { $base: "#{$layer-namespace}.#{$base}"; }
     @return list.join(
-      ($-base-layer),
+      ($base),
       layer-names($and-up, $with-namespace: $with-namespace),
       comma
     );

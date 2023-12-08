@@ -25,7 +25,7 @@
 * layer definitions
 */
 @layer responsive {
-  @layer base, responsive.from-bp-xs, responsive.from-bp-sm, responsive.from-bp-md, responsive.from-bp-lg, responsive.from-bp-xl, responsive.bp-xs, responsive.bp-sm, responsive.bp-md, responsive.bp-lg, responsive.bp-xl;
+  @layer base, from-bp-xs, from-bp-sm, from-bp-md, from-bp-lg, from-bp-xl, bp-xs, bp-sm, bp-md, bp-lg, bp-xl;
 }
 /**
  * breakpoint-names - The names of all breakpoints.

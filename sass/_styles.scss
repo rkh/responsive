@@ -9,7 +9,7 @@
   * layer definitions
   */
   @include with-top-layer {
-    @layer #{layer-names($include-base: true)};
+    @layer #{layer-names($include-base: true, $with-namespace: false)};
   }
 }
 
