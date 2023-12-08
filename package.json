@@ -12,7 +12,10 @@
     "LICENSE.md",
     "README.md"
   ],
-  "repository": "rkh/responsive",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rkh/responsive.git"
+  },
   "license": "MIT",
   "scripts": {
     "build": "sass src/index.scss css/index.css && sass --no-source-map --style compressed src/index.scss css/index.min.css"
