@@ -3,25 +3,38 @@
 @use "sass:list";
 @use "sass:string";
 
-@function layer-name($breakpoint: null, $and-up: null, $error: true) {
+@function layer-name($breakpoint: null, $and-up: null, $error: true, $with-namespace: true) {
   $prefix: "bp";
   @if $and-up == null { $and-up: state.and-up(); }
   @if $breakpoint == null { $breakpoint: state.breakpoint($and-up); }
   @if $breakpoint == null and $error { @error "No breakpoint set"; }
   @if $and-up { $prefix: "from-bp"; }
+  @if $with-namespace and $layer-namespace { $prefix: "#{$layer-namespace}.#{$prefix}" };
   @return string.unquote("#{$prefix}-#{$breakpoint}");
 }
 
-@function layer-names($and-up: null, $include-base: false) {
+@function layer-names($and-up: null, $include-base: false, $with-namespace: true) {
   @if $include-base {
-    @return list.join((base), layer-names($and-up), comma);
+    @return list.join(
+      (base),
+      layer-names($and-up, $with-namespace: $with-namespace),
+      comma
+    );
   }
   @if $and-up == null {
-    @return list.join(layer-names(true, $include-base), layer-names(false), comma);
+    @return list.join(
+      layer-names(true, $include-base, $with-namespace: $with-namespace),
+      layer-names(false, $with-namespace: $with-namespace),
+      comma
+    );
   }
   $names: ();
   @each $breakpoint in $breakpoint-names {
-    $names: list.append($names, layer-name($breakpoint, $and-up), $separator: comma);
+    $names: list.append(
+      $names,
+      layer-name($breakpoint, $and-up, $with-namespace: $with-namespace),
+      $separator: comma
+    );
   }
   @return $names;
 }
@@ -31,32 +44,19 @@
     @layer #{$layer-namespace} {
       @content;
     }
-  }
-}
-
-@mixin with-layer($layer: null) {
-  @if $layer == null { $layer: $use-layers; }
-  @if $layer == true { $layer: layer-name(); }
-  @if $layer {
-    @include with-top-layer {
-      @layer #{$layer} {
-        @content;
-      }
-    }
   } @else {
     @content;
   }
 }
 
-// @mixin definition {
-//   @if $use-layers {
-//     @at-root {
-//       @include with-top-layer {
-//         @each $breakpoint in $breakpoint-names {
-//           @layer layer-name($breakpoint) {
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+@mixin with-layer($layer: null, $with-namespace: true) {
+  @if $layer == null { $layer: $use-layers; }
+  @if $layer == true { $layer: layer-name($with-namespace: $with-namespace); }
+  @if $layer {
+    @layer #{$layer} {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
