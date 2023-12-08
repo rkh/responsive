@@ -1,0 +1,23 @@
+@use '..'  as responsive with ($breakpoints: (
+  'small': 350px,
+  'medium': 768px,
+  'large': 1024px,
+));
+
+/* scale the font-size for headlines */
+h1 {
+  font-size: responsive.size(24px);
+}
+
+/* changes color based on breakpoint */
+.example {
+  @include responsive.breakpoint('small') {
+    color: green;
+  }
+  @include responsive.breakpoint('medium') {
+    color: red;
+  }
+  @include responsive.breakpoint('large') {
+    color: white;
+  }
+}
