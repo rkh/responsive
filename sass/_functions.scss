@@ -127,7 +127,10 @@ $-responsive-units: (
 /// @example scss return values
 ///   @debug responsive.size(100px, "sm"); // 17.3611111111vw
 ///   @debug responsive.size(100pt, "sm"); // 23.1481481481vw
-///   @debug responsive.size(100px); // calc(var(--responsive-pixel-width) * 100px)
+///   @debug responsive.size(100px); // calc(var(--responsive-pixel-width) * 100)
+///   @include breakpoint("sm") {
+///     @debug responsive-size(100px); // 17.3611111111vw
+///   }
 /// 
 /// @example scss use with properties
 ///   .example {
@@ -136,7 +139,7 @@ $-responsive-units: (
 ///   }
 /// 
 /// @param {Number} $input - The size to scale.
-/// @param {String|Null} $breakpoint [null] - The breakpoint to get the assumed width for.
+/// @param {String|Null} $breakpoint [null] - The breakpoint to get the size for.
 /// @return {Number|String} The scalable size.
 @function size($input, $breakpoint: null) {
   $value: math.div($input, 1px); // convert to px and drop unit
@@ -181,7 +184,7 @@ $-responsive-units: (
 /// @param {String|Null} $breakpoint [null] - The breakpoint to get the next breakpoint for.
 /// @param {Boolean} $error [true] - Whether to throw an error if no breakpoint is set.
 /// @return {String|Null} The name of the next breakpoint.
-@function next-breakpoint($breakpoint, $error: true) {
+@function next-breakpoint($breakpoint: null, $error: true) {
   @if $breakpoint == null {
     $breakpoint: state.breakpoint(false);
     @if $breakpoint == null {

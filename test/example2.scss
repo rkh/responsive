@@ -1,0 +1,18 @@
+@use '..' as responsive;
+
+.example {
+  @include responsive.breakpoint("sm") {
+    color: green;
+  }
+  @include responsive.defaults {
+    color: red;
+  }
+}
+
+.my-other-example {
+  color: blue; // no !important needed
+}
+
+.color-example {
+  @include responsive.property("color", red, (sm: green));
+}

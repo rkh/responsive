@@ -3,10 +3,12 @@
 @use "sass:list";
 @use "sass:string";
 
+$-base-layer: "base";
+
 @function layer-name($breakpoint: null, $and-up: null, $error: true, $with-namespace: true) {
   $prefix: "bp";
   @if $and-up == null { $and-up: state.and-up(); }
-  @if $breakpoint == null { $breakpoint: state.breakpoint($and-up); }
+  @if $breakpoint == null { $breakpoint: state.breakpoint(not $and-up); }
   @if $breakpoint == null and $error { @error "No breakpoint set"; }
   @if $and-up { $prefix: "from-bp"; }
   @if $with-namespace and $layer-namespace { $prefix: "#{$layer-namespace}.#{$prefix}" };
@@ -16,7 +18,7 @@
 @function layer-names($and-up: null, $include-base: false, $with-namespace: true) {
   @if $include-base {
     @return list.join(
-      (base),
+      ($-base-layer),
       layer-names($and-up, $with-namespace: $with-namespace),
       comma
     );
@@ -37,6 +39,19 @@
     );
   }
   @return $names;
+}
+
+@function use-layers($override: null) {
+  @if $override == null { @return $use-layers; }
+  @else { @return $override; }
+}
+
+@mixin with-base-layer($with-namespace: true) {
+  $name: $-base-layer;
+  @if $with-namespace and $layer-namespace { $name: "#{$layer-namespace}.#{$name}"; }
+  @layer #{$name} {
+    @content;
+  }
 }
 
 @mixin with-top-layer {

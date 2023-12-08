@@ -40,10 +40,73 @@
   }
 }
 
+
+/// Mixin to set defaults for properties that can be overridden by the `breakpoint` mixin.
+///
+/// @example scss Input
+///   .example {
+///     @include responsive.breakpoint("sm") {
+///       color: green;
+///     }
+///     @include responsive.defaults {
+///       color: red;
+///     }
+///   }
+///   
+///   .my-other-example {
+///     color: blue; // no !important needed
+///   }
+/// 
+/// @example css Output
+///   @media (min-width: 36em) {
+///     @media not all and (min-width: 48em) {
+///       @layer responsive.bp-sm {
+///         .example {
+///           color: green;
+///         }
+///       }
+///     }
+///   }
+///   
+///   @layer responsive.base {
+///     .example {
+///       color: red;
+///     }
+///   }
+///   
+///   .my-other-example {
+///     color: blue;
+///   }
+@mixin defaults($use-layers: null) {
+  @if layers.use-layers($use-layers) {
+    @include layers.with-base-layer {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+/// A shorthand for using `breakpoint` and `defaults` together for a single property.
+///
+/// @example scss Input
+///   .example {
+///     @include responsive.property("color", red, (sm: green));
+///   }
+@mixin property($property, $default: null, $breakpoints, $use-layers: null, $and-up: false) {
+  @if $default != null {
+    @include defaults($use-layers) { #{$property}: $default; }
+  }
+  @each $breakpoint, $value in $breakpoints {
+    @include breakpoint($breakpoint, $and-up: $and-up, $use-layers: $use-layers) {
+      #{$property}: $value;
+    }
+  }
+}
+
 // Always combine with state.with-breakpoint and layers.with-layer.
 @mixin -media-query($from, $to: null) {
   $min-width: responsive-width($from, "em", $first-zero: true);
-  $max-width: responsive-width($to, "em");
   @media (min-width: $min-width) {
     @if $to == null {
       @content;
