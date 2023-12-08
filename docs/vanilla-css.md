@@ -132,7 +132,7 @@ To have a query that covers only exactly one breakpoint, you can use the followi
 
 #### Downsides
 
-* You have to add a [JavaScript snippet](js/add-class.js) to the page to add the classes to the `<html>` element.
+* You have to add a [JavaScript snippet](../js/add-class.js) to the page to add the classes to the `<html>` element.
 
 #### Example
 
