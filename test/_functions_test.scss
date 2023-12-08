@@ -1,0 +1,89 @@
+@use "../sass/functions" as *;
+@use "../sass/utils/state";
+@use "../node_modules/sass-true" as *;
+@use "sass:math";
+
+@include test('responsive-width') {
+  @include assert-equal(responsive-width("sm"), 36rem);
+  @include assert-equal(responsive-width(100px), 6.25rem);
+  @include assert-equal(responsive-width(12pt), 1rem);
+  @include assert-equal(responsive-width(12pt, "em"), 1em);
+}
+
+@include test('assumed-width') {
+  @include assert-equal(assumed-width("xs"), 350px);
+  @include assert-equal(assumed-width("sm"), 576px);
+  @include assert-equal(assumed-width(), var(--assumed-width));
+  @include state.with-breakpoint("sm") {
+    @include assert-equal(assumed-width(), 576px);
+  }
+}
+
+@include test('min-width') {
+  @include assert-equal(min-width("xs"), 306.25px);
+  @include assert-equal(min-width("sm"), 576px);
+  @include assert-equal(min-width(), var(--responsive-min-width));
+  @include state.with-breakpoint("sm") {
+    @include assert-equal(min-width(), 576px);
+  }
+}
+
+@include test('pixel-width') {
+  @include assert-equal(math.round(pixel-width("xs") * 100), 29vw);
+  @include assert-equal(pixel-width(), var(--responsive-pixel-width));
+  @include state.with-breakpoint("xs") {
+    @include assert-equal(math.round(pixel-width() * 100), 29vw);
+  }
+}
+
+@include test('size') {
+  @include assert-equal(size(100px), calc(var(--responsive-pixel-width) * 100), $inspect: true);
+  @include assert-equal(math.round(size(100px, "xs")), 29vw);
+  @include state.with-breakpoint("xs") {
+    @include assert-equal(math.round(size(100px)), 29vw);
+  }
+}
+
+@include test('breakpoint') {
+  @include assert-equal(breakpoint($error: false), null);
+  @include state.with-breakpoint("xs") {
+    @include assert-equal(breakpoint(true), "xs");
+    @include assert-equal(breakpoint(false), "xs");
+  }
+  @include assert-equal(breakpoint($error: false), null);
+  @include state.with-breakpoint("xs", true) {
+    @include assert-equal(breakpoint(true, $error: false), null);
+    @include assert-equal(breakpoint(false), "xs");
+  }
+}
+
+@include test('breakpoint-active') {
+  @include assert-false(breakpoint-active());
+  @include assert-false(breakpoint-active($strict: true));
+  @include assert-false(breakpoint-active($strict: false));
+  @include assert-false(breakpoint-active("xs"));
+  @include assert-false(breakpoint-active("sm"));
+  @include state.with-breakpoint("xs") {
+    @include assert-true(breakpoint-active());
+    @include assert-true(breakpoint-active($strict: true));
+    @include assert-true(breakpoint-active($strict: false));
+    @include assert-true(breakpoint-active("xs"));
+    @include assert-false(breakpoint-active("sm"));
+    @include assert-true(breakpoint-active("xs", $strict: true));
+    @include assert-false(breakpoint-active("sm", $strict: true));
+  }
+  @include state.with-breakpoint("xs", $and-up: true) {
+    @include assert-true(breakpoint-active());
+    @include assert-false(breakpoint-active($strict: true));
+    @include assert-true(breakpoint-active($strict: false));
+    @include assert-true(breakpoint-active("xs"));
+    @include assert-true(breakpoint-active("sm"));
+    @include assert-false(breakpoint-active("xs", $strict: true));
+    @include assert-false(breakpoint-active("sm", $strict: true));
+  }
+}
+
+@include test('next-breakpoint') {
+  @include assert-equal(next-breakpoint("xs"), "sm");
+  @include assert-equal(next-breakpoint("xl", $error: false), null);
+}

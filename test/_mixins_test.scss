@@ -1,0 +1,28 @@
+@use "../sass/mixins" as *;
+@use "../sass/functions" as *;
+@use "../node_modules/sass-true" as *;
+
+@include test('breakpoint mixin') {
+  @include assert {
+    @include output {
+      .example {
+        @include breakpoint("sm") { 
+          --current-breakpoint: #{breakpoint()};
+        }
+      }
+    }
+    @include expect {
+      @media (min-width: 36em) {
+        @media not all and (min-width: 48em) {
+          @layer responsive {
+            @layer bp-sm {
+              .example {
+                --current-breakpoint: sm;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
